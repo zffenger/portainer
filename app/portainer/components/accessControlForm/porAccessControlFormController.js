@@ -40,7 +40,8 @@ angular.module('portainer.app').controller('porAccessControlFormController', [
       });
     }
 
-    function initComponent() {
+    this.$onInit = $onInit;
+    function $onInit() {
       var isAdmin = Authentication.isAdmin();
       ctrl.isAdmin = isAdmin;
 
@@ -75,7 +76,5 @@ angular.module('portainer.app').controller('porAccessControlFormController', [
           Notifications.error('Failure', err, 'Unable to retrieve access control information');
         });
     }
-
-    initComponent();
   },
 ]);
