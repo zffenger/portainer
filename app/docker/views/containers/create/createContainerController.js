@@ -77,6 +77,7 @@ angular.module('portainer.docker').controller('CreateContainerController', [
       MemoryReservation: 0,
       CmdMode: 'default',
       EntrypointMode: 'default',
+      EnvMode: 'simple',
       NodeName: null,
       capabilities: [],
       LogDriverName: '',
