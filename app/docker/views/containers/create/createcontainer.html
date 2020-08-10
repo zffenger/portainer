@@ -584,10 +584,10 @@
                 </div>
                 <div class="col-sm-12">
                   <p>
-                    <a class="small interactive" ng-if="formValues.EnvMode == 'simple'" ng-click="formValues.EnvMode = 'advanced'">
+                    <a class="small interactive" ng-if="formValues.EnvMode == 'simple'" ng-click="switchEnvMode();">
                       <i class="fa fa-list-ol space-right" aria-hidden="true"></i> Advanced mode
                     </a>
-                    <a class="small interactive" ng-if="formValues.EnvMode == 'advanced'" ng-click="formValues.EnvMode = 'simple'">
+                    <a class="small interactive" ng-if="formValues.EnvMode == 'advanced'" ng-click="switchEnvMode();">
                       <i class="fa fa-edit space-right" aria-hidden="true"></i> Simple mode
                     </a>
                   </p>
@@ -605,7 +605,14 @@
                     <button type="button" class="btn btn-sm btn-default" style="margin-left: 15px; margin-top: 10px;" ng-click="addEnvironmentVariable()">
                       <i class="fa fa-plus-circle" aria-hidden="true"></i> Add an evironment variable
                     </button>
-                    <button type="button" class="btn btn-sm btn-default" ngf-select="$ctrl.addEntryFromFile($file)" style="margin-left: 0; margin-top: 10px;">
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-default"
+                      ngf-select="addFromFile($file)"
+                      ngf-accept="'.env'"
+                      ngf-max-size="1MB"
+                      style="margin-left: 0; margin-top: 10px;"
+                    >
                       <i class="fa fa-file-upload" aria-hidden="true"></i> Load variables from .env file
                     </button>
                   </div>
@@ -617,10 +624,16 @@
                       <span class="input-group-addon">name</span>
                       <input type="text" class="form-control" ng-model="variable.name" placeholder="e.g. FOO" />
                     </div>
-                    <div class="input-group col-sm-5 input-group-sm">
+                    <div class="input-group col-sm-5 input-group-sm" ng-if="variable.value !== undefined">
                       <span class="input-group-addon">value</span>
                       <input type="text" class="form-control" ng-model="variable.value" placeholder="e.g. bar" />
                     </div>
+                    <button class="btn btn-sm btn-primary" type="button" ng-if="variable.value === undefined" ng-click="variable.value=''">
+                      <i class="fa fa-plus" aria-hidden="true"></i> Add value
+                    </button>
+                    <button class="btn btn-sm btn-primary" type="button" ng-if="variable.value !== undefined" ng-click="removeEnvironmentVariableValue($index)">
+                      <i class="fa fa-minus" aria-hidden="true"></i> Remove value
+                    </button>
                     <button class="btn btn-sm btn-danger" type="button" ng-click="removeEnvironmentVariable($index)">
                       <i class="fa fa-trash" aria-hidden="true"></i>
                     </button>
@@ -629,15 +642,7 @@
                 <!-- !environment-variable-input-list -->
               </div>
               <div class="form-group" ng-if="formValues.EnvMode == 'advanced'">
-                <input type="text" ng-model="$ctrl.formValues.DataYaml" required style="display: none;" />
-                <code-editor
-                  identifier="kubernetes-configuration-editor"
-                  placeholder="e.g. key=value"
-                  value="$ctrl.formValues.DataYaml"
-                  read-only="false"
-                  yml="true"
-                  on-change="($ctrl.editorUpdate)"
-                ></code-editor>
+                <code-editor identifier="container-creation-editor" placeholder="e.g. key=value" value="formValues.EnvContent" yml="false" on-change="(editorUpdate)"></code-editor>
               </div>
               <!-- !environment-variables -->
             </form>

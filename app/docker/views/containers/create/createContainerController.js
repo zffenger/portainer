@@ -78,6 +78,7 @@ angular.module('portainer.docker').controller('CreateContainerController', [
       CmdMode: 'default',
       EntrypointMode: 'default',
       EnvMode: 'simple',
+      EnvContent: '',
       NodeName: null,
       capabilities: [],
       LogDriverName: '',
@@ -102,6 +103,19 @@ angular.module('portainer.docker').controller('CreateContainerController', [
     $scope.onImageNameChange = function () {
       $scope.formValues.CmdMode = 'default';
       $scope.formValues.EntrypointMode = 'default';
+    };
+
+    $scope.editorUpdate = function (cm) {
+      $scope.formValues.EnvContent = cm.getValue();
+    };
+
+    $scope.switchEnvMode = function () {
+      if ($scope.formValues.EnvMode == 'simple') {
+        $scope.formValues.EnvMode = 'advanced';
+      } else {
+        $scope.formValues.EnvMode = 'simple';
+      }
+      // TO-DO: Convert data between modes
     };
 
     $scope.config = {
@@ -148,6 +162,22 @@ angular.module('portainer.docker').controller('CreateContainerController', [
 
     $scope.removeEnvironmentVariable = function (index) {
       $scope.config.Env.splice(index, 1);
+    };
+
+    $scope.removeEnvironmentVariableValue = function (index) {
+      delete $scope.config.Env[index].value;
+    };
+
+    $scope.addFromFile = function (file) {
+      if (file) {
+        const temporaryFileReader = new FileReader();
+        temporaryFileReader.readAsText(file);
+        temporaryFileReader.onload = function (event) {
+          if (event.target.result) {
+            // TO-DO: parse result and fill UI
+          }
+        };
+      }
     };
 
     $scope.addPortBinding = function () {
@@ -239,6 +269,10 @@ angular.module('portainer.docker').controller('CreateContainerController', [
       config.Env.forEach(function (v) {
         if (v.name && v.value) {
           env.push(v.name + '=' + v.value);
+        } else if (v.value == '') {
+          env.push(v.name + '=' + '');
+        } else {
+          env.push(v.name);
         }
       });
       config.Env = env;
@@ -510,8 +544,12 @@ angular.module('portainer.docker').controller('CreateContainerController', [
       var envArr = [];
       for (var e in $scope.config.Env) {
         if ({}.hasOwnProperty.call($scope.config.Env, e)) {
-          var arr = $scope.config.Env[e].split(/\=(.*)/);
-          envArr.push({ name: arr[0], value: arr[1] });
+          if (_.includes($scope.config.Env[e], '=')) {
+            var arr = $scope.config.Env[e].split(/\=(.*)/);
+            envArr.push({ name: arr[0], value: arr[1] });
+          } else {
+            envArr.push({ name: $scope.config.Env[e] });
+          }
         }
       }
       $scope.config.Env = envArr;
