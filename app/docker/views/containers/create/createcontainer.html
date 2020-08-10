@@ -606,7 +606,7 @@
                       <i class="fa fa-plus-circle" aria-hidden="true"></i> Add an evironment variable
                     </button>
                     <button type="button" class="btn btn-sm btn-default" ngf-select="$ctrl.addEntryFromFile($file)" style="margin-left: 0; margin-top: 10px;">
-                      <i class="fa fa-file-upload" aria-hidden="true"></i> Load variables from file
+                      <i class="fa fa-file-upload" aria-hidden="true"></i> Load variables from .env file
                     </button>
                   </div>
                 </div>
@@ -632,6 +632,7 @@
                 <input type="text" ng-model="$ctrl.formValues.DataYaml" required style="display: none;" />
                 <code-editor
                   identifier="kubernetes-configuration-editor"
+                  placeholder="e.g. key=value"
                   value="$ctrl.formValues.DataYaml"
                   read-only="false"
                   yml="true"
