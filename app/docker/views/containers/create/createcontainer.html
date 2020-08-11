@@ -601,19 +601,11 @@
                   Switch to simple mode to define variables line by line, or load from .env file
                 </div>
                 <div class="form-group" ng-if="formValues.EnvMode == 'simple'">
-                  <div class="col-sm-12">
-                    <button type="button" class="btn btn-sm btn-default" style="margin-left: 15px; margin-top: 10px;" ng-click="addEnvironmentVariable()">
+                  <div class="col-sm-12" style="display: flex; align-items: center; margin-left: 10px; margin-top: 10px;">
+                    <button type="button" class="btn btn-sm btn-default" ng-click="addEnvironmentVariable()">
                       <i class="fa fa-plus-circle" aria-hidden="true"></i> Add an evironment variable
                     </button>
-                    <button
-                      type="button"
-                      class="btn btn-sm btn-default"
-                      ngf-select="addFromFile($file)"
-                      ngf-accept="'.env'"
-                      ngf-max-size="1MB"
-                      style="margin-left: 0; margin-top: 10px;"
-                      ngf-model-invalid="errorFile"
-                    >
+                    <button type="button" class="btn btn-sm btn-default" ngf-select="addFromFile($file)" ngf-accept="'.env'" ngf-max-size="1MB" ngf-model-invalid="errorFile">
                       <i class="fa fa-file-upload" aria-hidden="true"></i> Load variables from .env file
                     </button>
                     <span style="margin-left: 5px;" ng-if="errorFile.$error == 'maxSize'">
