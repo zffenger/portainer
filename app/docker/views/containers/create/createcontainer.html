@@ -612,9 +612,14 @@
                       ngf-accept="'.env'"
                       ngf-max-size="1MB"
                       style="margin-left: 0; margin-top: 10px;"
+                      ngf-model-invalid="errorFile"
                     >
                       <i class="fa fa-file-upload" aria-hidden="true"></i> Load variables from .env file
                     </button>
+                    <span style="margin-left: 5px;" ng-if="errorFile.$error == 'maxSize'">
+                      <i class="fa fa-times red-icon" aria-hidden="true"></i>
+                      File too large! Try uploading a file smaller than 1MB
+                    </span>
                   </div>
                 </div>
                 <!-- environment-variable-input-list -->
