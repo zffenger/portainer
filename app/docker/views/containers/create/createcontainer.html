@@ -616,7 +616,7 @@
                 </div>
                 <!-- environment-variable-input-list -->
                 <div class="col-sm-12 form-inline" style="margin-top: 10px;" ng-if="formValues.EnvMode == 'simple'">
-                  <div ng-repeat="variable in config.Env" style="margin-top: 2px;">
+                  <div ng-repeat="variable in formValues.EnvContent" style="margin-top: 2px;">
                     <div class="input-group col-sm-5 input-group-sm">
                       <span class="input-group-addon">name</span>
                       <input type="text" class="form-control" ng-model="variable.name" placeholder="e.g. FOO" />
