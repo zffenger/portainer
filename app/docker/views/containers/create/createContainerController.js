@@ -117,7 +117,7 @@ angular.module('portainer.docker').controller('CreateContainerController', [
           // TO-DO: Skip newline on last line
           editorContent += `${$scope.formValues.EnvContent[variable].name}=${$scope.formValues.EnvContent[variable].value || ''}\n`;
         }
-        $scope.formValues.EnvContent = editorContent;
+        $scope.formValues.EnvContent = editorContent.replace(/\n$/, '');
       } else {
         $scope.formValues.EnvMode = 'simple';
         $scope.formValues.EnvContent = $scope.parseVariables($scope.formValues.EnvContent);
