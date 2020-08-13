@@ -4,6 +4,7 @@ angular.module('portainer.app').component('environmentVariablesPanel', {
   templateUrl: './environmentVariablesPanel.html',
   controller: EnvironmentVariablesPanelController,
   bindings: {
-    envVars: '=', // array [{name:key, value:value}]
+    envVars: '=',
+    resourceType: '<?',
   },
 });

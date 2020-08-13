@@ -4,6 +4,9 @@
       Environment variables
     </div>
     <div class="col-sm-12">
+      <p ng-if="$ctrl.resourceType == 'stack'">These values will be used as substitutions in the stack file</p>
+      <p ng-if="$ctrl.resourceType == 'service'">These values will be applied to the service when created</p>
+      <p ng-if="$ctrl.resourceType == 'container'">These values will be applied to the container when deployed</p>
       <p>
         <a class="small interactive" ng-if="$ctrl.mode == 'simple'" ng-click="$ctrl.switchEnvMode();">
           <i class="fa fa-list-ol space-right" aria-hidden="true"></i> Advanced mode
