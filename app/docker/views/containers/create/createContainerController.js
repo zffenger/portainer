@@ -105,25 +105,6 @@ angular.module('portainer.docker').controller('CreateContainerController', [
       $scope.formValues.EntrypointMode = 'default';
     };
 
-    $scope.editorUpdate = function (cm) {
-      $scope.formValues.EnvContent = cm.getValue();
-    };
-
-    $scope.switchEnvMode = function () {
-      if ($scope.formValues.EnvMode == 'simple') {
-        $scope.formValues.EnvMode = 'advanced';
-        var editorContent = '';
-        for (var variable in $scope.formValues.EnvContent) {
-          // TO-DO: Skip newline on last line
-          editorContent += `${$scope.formValues.EnvContent[variable].name}=${$scope.formValues.EnvContent[variable].value || ''}\n`;
-        }
-        $scope.formValues.EnvContent = editorContent.replace(/\n$/, '');
-      } else {
-        $scope.formValues.EnvMode = 'simple';
-        $scope.formValues.EnvContent = $scope.parseVariables($scope.formValues.EnvContent);
-      }
-    };
-
     $scope.config = {
       Image: '',
       Env: [],
@@ -160,46 +141,6 @@ angular.module('portainer.docker').controller('CreateContainerController', [
 
     $scope.removeVolume = function (index) {
       $scope.formValues.Volumes.splice(index, 1);
-    };
-
-    $scope.addEnvironmentVariable = function () {
-      $scope.formValues.EnvContent.push({ name: '', value: '' });
-    };
-
-    $scope.removeEnvironmentVariable = function (index) {
-      $scope.formValues.EnvContent.splice(index, 1);
-    };
-
-    $scope.removeEnvironmentVariableValue = function (index) {
-      delete $scope.formValues.EnvContent[index].value;
-    };
-
-    $scope.parseVariables = function (src) {
-      var parsedVars = [];
-      const KEYVAL_REGEX = /^\s*([\w.-]+)\s*=(.*)?\s*$/;
-      const NEWLINES_REGEX = /\n|\r|\r\n/;
-
-      _.forEach(src.split(NEWLINES_REGEX), (line) => {
-        const parsedKeyValArr = line.match(KEYVAL_REGEX);
-        if (parsedKeyValArr != null) {
-          parsedVars.push({ name: parsedKeyValArr[1], value: parsedKeyValArr[2] || '' });
-        }
-      });
-      return parsedVars;
-    };
-
-    $scope.addFromFile = function (file) {
-      if (file) {
-        const temporaryFileReader = new FileReader();
-        temporaryFileReader.readAsText(file);
-        temporaryFileReader.onload = function (event) {
-          if (event.target.result) {
-            var parsed = $scope.parseVariables(event.target.result);
-            $scope.formValues.EnvContent = _.concat($scope.formValues.EnvContent, parsed);
-            $scope.$apply();
-          }
-        };
-      }
     };
 
     $scope.addPortBinding = function () {
