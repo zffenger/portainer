@@ -43,7 +43,7 @@
         </div>
         <div class="input-group col-sm-5 input-group-sm" ng-if="variable.value !== undefined">
           <span class="input-group-addon">value</span>
-          <input type="text" class="form-control" ng-model="variable.value" placeholder="e.g. bar" />
+          <input type="text" class="form-control" ng-model="variable.value" placeholder="e.g. bar" ng-trim="false" />
         </div>
         <button class="btn btn-sm btn-primary" type="button" ng-if="variable.value === undefined" ng-click="variable.value=''">
           <i class="fa fa-plus" aria-hidden="true"></i> Add value
