@@ -17,7 +17,9 @@ class EnvironmentVariablesPanelController {
       this.formValues.EnvMode = 'advanced';
       var editorContent = '';
       for (var variable in this.formValues.EnvContent) {
-        editorContent += `${this.formValues.EnvContent[variable].name}=${this.formValues.EnvContent[variable].value || ''}\n`;
+        if (this.formValues.EnvContent[variable].name) {
+          editorContent += `${this.formValues.EnvContent[variable].name}=${this.formValues.EnvContent[variable].value || ''}\n`;
+        }
       }
       this.formValues.EnvContent = editorContent.replace(/\n$/, '');
     } else {
