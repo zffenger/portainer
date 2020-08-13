@@ -47,7 +47,6 @@ angular.module('portainer.app').controller('StackController', [
     $scope.formValues = {
       Prune: false,
       Endpoint: null,
-      EnvMode: 'simple',
       EnvContent: [],
     };
 
@@ -152,7 +151,7 @@ angular.module('portainer.app').controller('StackController', [
 
     $scope.deployStack = function () {
       var stackFile = $scope.stackFileContent;
-      var env = FormHelper.removeInvalidEnvVars($scope.stack.Env);
+      var env = FormHelper.removeInvalidEnvVars($scope.formValues.EnvContent);
       var prune = $scope.formValues.Prune;
       var stack = $scope.stack;
 

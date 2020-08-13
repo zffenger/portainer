@@ -229,9 +229,6 @@ angular.module('portainer.docker').controller('CreateContainerController', [
 
     function prepareEnvironmentVariables(config) {
       var env = [];
-      if ($scope.formValues.EnvMode == 'advanced') {
-        $scope.formValues.EnvContent = $scope.parseVariables($scope.formValues.EnvContent);
-      }
       $scope.formValues.EnvContent.forEach(function (v) {
         if (v.name && v.value) {
           env.push(v.name + '=' + v.value);

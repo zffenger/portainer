@@ -5,23 +5,21 @@
     </div>
     <div class="col-sm-12">
       <p>
-        <a class="small interactive" ng-if="$ctrl.formValues.EnvMode == 'simple'" ng-click="$ctrl.switchEnvMode();">
+        <a class="small interactive" ng-if="$ctrl.mode == 'simple'" ng-click="$ctrl.switchEnvMode();">
           <i class="fa fa-list-ol space-right" aria-hidden="true"></i> Advanced mode
         </a>
-        <a class="small interactive" ng-if="$ctrl.formValues.EnvMode == 'advanced'" ng-click="$ctrl.switchEnvMode();">
-          <i class="fa fa-edit space-right" aria-hidden="true"></i> Simple mode
-        </a>
+        <a class="small interactive" ng-if="$ctrl.mode == 'advanced'" ng-click="$ctrl.switchEnvMode();"> <i class="fa fa-edit space-right" aria-hidden="true"></i> Simple mode </a>
       </p>
     </div>
-    <div class="col-sm-12 small text-muted" ng-if="$ctrl.formValues.EnvMode == 'simple'">
+    <div class="col-sm-12 small text-muted" ng-if="$ctrl.mode == 'simple'">
       <i class="fa fa-info-circle blue-icon" aria-hidden="true" style="margin-right: 2px;"></i>
       Switch to advanced mode to copy & paste multiple variables
     </div>
-    <div class="col-sm-12 small text-muted" ng-if="$ctrl.formValues.EnvMode == 'advanced'">
+    <div class="col-sm-12 small text-muted" ng-if="$ctrl.mode == 'advanced'">
       <i class="fa fa-info-circle blue-icon" aria-hidden="true" style="margin-right: 2px;"></i>
       Switch to simple mode to define variables line by line, or load from .env file
     </div>
-    <div class="form-group" ng-if="$ctrl.formValues.EnvMode == 'simple'">
+    <div class="form-group" ng-if="$ctrl.mode == 'simple'">
       <div class="col-sm-12" style="display: flex; align-items: center; margin-left: 10px; margin-top: 10px;">
         <button type="button" class="btn btn-sm btn-default" ng-click="$ctrl.addEnvironmentVariable()">
           <i class="fa fa-plus-circle" aria-hidden="true"></i> Add an evironment variable
@@ -35,8 +33,8 @@
         </span>
       </div>
     </div>
-    <div class="col-sm-12 form-inline" style="margin-top: 10px;" ng-if="$ctrl.formValues.EnvMode == 'simple'">
-      <div ng-repeat="variable in $ctrl.formValues.EnvContent" style="margin-top: 2px;">
+    <div class="col-sm-12 form-inline" style="margin-top: 10px;" ng-if="$ctrl.mode == 'simple'">
+      <div ng-repeat="variable in $ctrl.envVars" style="margin-top: 2px;">
         <div class="input-group col-sm-5 input-group-sm">
           <span class="input-group-addon">name</span>
           <input type="text" class="form-control" ng-model="variable.name" placeholder="e.g. FOO" />
@@ -57,13 +55,7 @@
       </div>
     </div>
   </div>
-  <div class="form-group" ng-if="$ctrl.formValues.EnvMode == 'advanced'">
-    <code-editor
-      identifier="environment-variables-editor"
-      placeholder="e.g. key=value"
-      value="$ctrl.formValues.EnvContent"
-      yml="false"
-      on-change="($ctrl.editorUpdate)"
-    ></code-editor>
+  <div class="form-group" ng-if="$ctrl.mode == 'advanced'" style="margin-left: 1px;">
+    <code-editor identifier="environment-variables-editor" placeholder="e.g. key=value" value="$ctrl.text" yml="false" on-change="($ctrl.editorUpdate)"></code-editor>
   </div>
 </form>

@@ -111,7 +111,7 @@
               </div>
               <!-- environment-variables -->
               <div ng-if="stack && stack.Type === 1">
-                <environment-variables-panel form-values="formValues" style="margin-left: 5px;"></environment-variables-panel>
+                <environment-variables-panel env-vars="formValues.EnvContent"></environment-variables-panel>
               </div>
               <!-- !environment-variables -->
               <!-- options -->

@@ -25,7 +25,6 @@ angular
       RepositoryAuthentication: false,
       RepositoryUsername: '',
       RepositoryPassword: '',
-      EnvMode: 'simple',
       EnvContent: [],
       ComposeFilePathInRepository: 'docker-compose.yml',
       AccessControlData: new AccessControlFormData(),

@@ -2,7 +2,11 @@ import _ from 'lodash-es';
 
 class EnvironmentVariablesPanelController {
   /* @ngInject */
-  constructor() {
+  constructor($async) {
+    this.$async = $async;
+    this.mode = 'simple';
+    this.text = '';
+
     this.switchEnvMode = this.switchEnvMode.bind(this);
     this.editorUpdate = this.editorUpdate.bind(this);
     this.addEnvironmentVariable = this.addEnvironmentVariable.bind(this);
@@ -10,65 +14,78 @@ class EnvironmentVariablesPanelController {
     this.removeEnvironmentVariableValue = this.removeEnvironmentVariableValue.bind(this);
     this.parseVariables = this.parseVariables.bind(this);
     this.addFromFile = this.addFromFile.bind(this);
+    this.addFromFileAsync = this.addFromFileAsync.bind(this);
   }
 
   switchEnvMode() {
-    if (this.formValues.EnvMode == 'simple') {
-      this.formValues.EnvMode = 'advanced';
-      var editorContent = '';
-      for (var variable in this.formValues.EnvContent) {
-        if (this.formValues.EnvContent[variable].name) {
-          editorContent += `${this.formValues.EnvContent[variable].name}=${this.formValues.EnvContent[variable].value || ''}\n`;
+    if (this.mode == 'simple') {
+      this.mode = 'advanced';
+      let editorContent = '';
+      for (let variable in this.envVars) {
+        if (this.envVars[variable].name) {
+          editorContent += `${this.envVars[variable].name}=${this.envVars[variable].value || ''}\n`;
         }
       }
-      this.formValues.EnvContent = editorContent.replace(/\n$/, '');
+      this.text = editorContent.replace(/\n$/, '');
     } else {
-      this.formValues.EnvMode = 'simple';
-      this.formValues.EnvContent = this.parseVariables(this.formValues.EnvContent);
+      this.mode = 'simple';
     }
   }
 
   editorUpdate(cm) {
-    this.formValues.EnvContent = cm.getValue();
+    this.text = cm.getValue();
+    this.envVars = this.parseVariables(this.text);
   }
 
   addEnvironmentVariable() {
-    this.formValues.EnvContent.push({ name: '', value: '' });
+    this.envVars.push({ name: '', value: '' });
   }
 
   removeEnvironmentVariable(index) {
-    this.formValues.EnvContent.splice(index, 1);
+    this.envVars.splice(index, 1);
   }
 
   removeEnvironmentVariableValue(index) {
-    delete this.formValues.EnvContent[index].value;
+    delete this.envVars[index].value;
   }
 
   parseVariables(src) {
-    var parsedVars = [];
     const KEYVAL_REGEX = /^\s*([\w.-]+)\s*=(.*)?\s*$/;
     const NEWLINES_REGEX = /\n|\r|\r\n/;
 
-    _.forEach(src.split(NEWLINES_REGEX), (line) => {
-      const parsedKeyValArr = line.match(KEYVAL_REGEX);
-      if (parsedKeyValArr != null) {
-        parsedVars.push({ name: parsedKeyValArr[1], value: parsedKeyValArr[2] || '' });
-      }
-    });
-    return parsedVars;
+    return _.filter(
+      _.map(
+        src.split(NEWLINES_REGEX),
+        (line) => {
+          const parsedKeyValArr = line.match(KEYVAL_REGEX);
+          if (parsedKeyValArr != null && parsedKeyValArr.length > 2) {
+            return { name: parsedKeyValArr[1], value: parsedKeyValArr[2] || '' };
+          }
+        },
+        (val) => val
+      )
+    );
   }
 
   addFromFile(file) {
+    return this.$async(this.addFromFileAsync, file);
+  }
+
+  async addFromFileAsync(file) {
     if (file) {
+      const text = await this.getTextFromFile(file);
+      const parsed = this.parseVariables(text);
+      this.envVars = _.concat(this.envVars, parsed);
+    }
+  }
+
+  getTextFromFile(file) {
+    return new Promise((resolve, reject) => {
       const temporaryFileReader = new FileReader();
       temporaryFileReader.readAsText(file);
-      temporaryFileReader.onload = function (event) {
-        if (event.target.result) {
-          var parsed = this.parseVariables(event.target.result);
-          this.formValues.EnvContent = _.concat(this.formValues.EnvContent, parsed);
-        }
-      }.bind(this);
-    }
+      temporaryFileReader.onload = (event) => resolve(event.target.result);
+      temporaryFileReader.onerror = (error) => reject(error);
+    });
   }
 }
 
