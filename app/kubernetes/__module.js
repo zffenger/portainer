@@ -95,6 +95,16 @@ angular.module('portainer.kubernetes', ['portainer.app']).config([
       },
     };
 
+    const applicationStats = {
+      name: 'kubernetes.applications.application.stats',
+      url: '/:pod/:container/stats',
+      views: {
+        'content@': {
+          component: 'kubernetesApplicationStatsView',
+        },
+      },
+    };
+
     const stacks = {
       name: 'kubernetes.stacks',
       url: '/stacks',
@@ -254,6 +264,7 @@ angular.module('portainer.kubernetes', ['portainer.app']).config([
     $stateRegistryProvider.register(applicationEdit);
     $stateRegistryProvider.register(applicationConsole);
     $stateRegistryProvider.register(applicationLogs);
+    $stateRegistryProvider.register(applicationStats);
     $stateRegistryProvider.register(stacks);
     $stateRegistryProvider.register(stack);
     $stateRegistryProvider.register(stackLogs);
