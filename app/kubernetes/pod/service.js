@@ -78,7 +78,8 @@ class KubernetesPodService {
   /**
    * Stats
    *
-   * @param {*} pod
+   * @param {string} namespace
+   * @param {string} podName
    */
   async statsAsync(namespace, podName) {
     try {
