@@ -9,7 +9,7 @@ import { KubernetesIngressClassTypes } from 'Kubernetes/ingress/constants';
 class KubernetesConfigureController {
   /* #region  CONSTRUCTOR */
   /* @ngInject */
-  constructor($async, $state, $stateParams, Notifications, KubernetesStorageService, EndpointService, EndpointProvider, ModalService) {
+  constructor($async, $state, $stateParams, Notifications, KubernetesStorageService, EndpointService, EndpointProvider, ModalService, KubernetesMetricsService) {
     this.$async = $async;
     this.$state = $state;
     this.$stateParams = $stateParams;
@@ -18,6 +18,7 @@ class KubernetesConfigureController {
     this.EndpointService = EndpointService;
     this.EndpointProvider = EndpointProvider;
     this.ModalService = ModalService;
+    this.KubernetesMetricsService = KubernetesMetricsService;
 
     this.IngressClassTypes = KubernetesIngressClassTypes;
 
@@ -115,6 +116,27 @@ class KubernetesConfigureController {
     return [storageClasses, ingressClasses];
   }
 
+  enableMetricsServer() {
+    if (this.formValues.UseServerMetrics) {
+      this.state.metrics.userClick = true;
+      this.state.metrics.pending = true;
+      this.KubernetesMetricsService.get()
+        .then(() => {
+          this.state.metrics.isServerRunning = true;
+          this.state.metrics.pending = false;
+          this.formValues.UseServerMetrics = true;
+        })
+        .catch(() => {
+          this.state.metrics.isServerRunning = false;
+          this.state.metrics.pending = false;
+          this.formValues.UseServerMetrics = false;
+        });
+    } else {
+      this.state.metrics.userClick = false;
+      this.formValues.UseServerMetrics = false;
+    }
+  }
+
   async configureAsync() {
     try {
       this.state.actionInProgress = true;
@@ -172,6 +194,11 @@ class KubernetesConfigureController {
       endpointId: this.$stateParams.id,
       duplicates: {
         ingressClasses: new KubernetesFormValueDuplicate(),
+      },
+      metrics: {
+        pending: false,
+        isServerRunning: false,
+        userClick: false,
       },
     };
 
