@@ -64,6 +64,15 @@
                     />
                     <label for="col_vis_created" ng-bind="$ctrl.columnVisibility.columns.created.label"></label>
                   </div>
+                  <div class="md-checkbox">
+                    <input
+                      id="col_vis_ip"
+                      ng-change="$ctrl.onColumnVisibilityChange($ctrl.columnVisibility)"
+                      type="checkbox"
+                      ng-model="$ctrl.columnVisibility.columns.ip.display"
+                    />
+                    <label for="col_vis_ip" ng-bind="$ctrl.columnVisibility.columns.ip.label"></label>
+                  </div>
                   <div class="md-checkbox" ng-if="$ctrl.showHostColumn">
                     <input
                       id="col_vis_host"
@@ -268,6 +277,13 @@
                   Created
                 </a>
               </th>
+              <th ng-show="$ctrl.columnVisibility.columns.ip.display">
+                <a ng-click="$ctrl.changeOrderBy('IP')">
+                  IP Address
+                  <i class="fa fa-sort-alpha-down" aria-hidden="true" ng-if="$ctrl.state.orderBy === 'IP' && !$ctrl.state.reverseOrder"></i>
+                  <i class="fa fa-sort-alpha-up" aria-hidden="true" ng-if="$ctrl.state.orderBy === 'IP' && $ctrl.state.reverseOrder"></i>
+                </a>
+              </th>
               <th ng-if="$ctrl.showHostColumn" ng-show="$ctrl.columnVisibility.columns.host.display">
                 <a ng-click="$ctrl.changeOrderBy('NodeName')">
                   Host
@@ -342,6 +358,7 @@
               <td ng-show="$ctrl.columnVisibility.columns.created.display">
                 {{ item.Created | getisodatefromtimestamp }}
               </td>
+              <td ng-show="$ctrl.columnVisibility.columns.ip.display">{{ item.IP ? item.IP : '-' }}</td>
               <td ng-if="$ctrl.showHostColumn" ng-show="$ctrl.columnVisibility.columns.host.display">{{ item.NodeName ? item.NodeName : '-' }}</td>
               <td ng-show="$ctrl.columnVisibility.columns.ports.display">
                 <a
