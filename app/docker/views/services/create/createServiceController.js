@@ -99,6 +99,11 @@ angular.module('portainer.docker').controller('CreateServiceController', [
       LogDriverName: '',
       LogDriverOpts: [],
       Webhook: false,
+      Healthcheck: '',
+      Interval: '',
+      Timeout: '',
+      StartPeriod: '',
+      Retries: 0,
     };
 
     $scope.state = {
@@ -445,6 +450,18 @@ angular.module('portainer.docker').controller('CreateServiceController', [
       }
     }
 
+    function prepareHealthcheckConfig(config, input) {
+      if (input.Healthcheck) {
+        config.TaskTemplate.ContainerSpec.HealthCheck = {
+          Test: ['CMD-SHELL', input.Healthcheck],
+          Interval: ServiceHelper.translateHumanDurationToNanos(input.Interval),
+          Timeout: ServiceHelper.translateHumanDurationToNanos(input.Timeout),
+          StartPeriod: ServiceHelper.translateHumanDurationToNanos(input.StartPeriod),
+          Retries: input.Retries,
+        };
+      }
+    }
+
     function prepareConfiguration() {
       var input = $scope.formValues;
       var config = {
@@ -479,6 +496,7 @@ angular.module('portainer.docker').controller('CreateServiceController', [
       prepareResourcesMemoryConfig(config, input);
       prepareRestartPolicy(config, input);
       prepareLogDriverConfig(config, input);
+      prepareHealthcheckConfig(config, input);
       return config;
     }
 
