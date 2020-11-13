@@ -16,7 +16,7 @@ export function KubernetesResourcePoolIngressClassFormValue(ingressClass) {
     IngressClass: ingressClass,
     RewriteTarget: false,
     Annotations: [], // KubernetesResourcePoolIngressClassAnnotationFormValue
-    Host: undefined,
+    Hosts: [],
     Selected: false,
     WasSelected: false,
     AdvancedConfig: false,
