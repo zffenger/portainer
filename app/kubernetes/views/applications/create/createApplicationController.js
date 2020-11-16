@@ -302,7 +302,7 @@ class KubernetesCreateApplicationController {
     const p = new KubernetesApplicationPublishedPortFormValue();
     const ingresses = this.filteredIngresses;
     p.IngressName = ingresses && ingresses.length ? ingresses[0].Name : undefined;
-    p.IngressHost = ingresses && ingresses.length ? ingresses[0].Host : undefined;
+    p.IngressHost = ingresses && ingresses.length ? ingresses[0].Hosts[0] : undefined;
     this.formValues.PublishedPorts.push(p);
   }
 
@@ -310,7 +310,7 @@ class KubernetesCreateApplicationController {
     const ingresses = this.filteredIngresses;
     _.forEach(this.formValues.PublishedPorts, (p) => {
       p.IngressName = ingresses && ingresses.length ? ingresses[0].Name : undefined;
-      p.IngressHost = ingresses && ingresses.length ? ingresses[0].Host : undefined;
+      p.IngressHost = ingresses && ingresses.length ? ingresses[0].Hosts[0] : undefined;
     });
   }
 
@@ -366,7 +366,8 @@ class KubernetesCreateApplicationController {
   onChangePortMappingIngress(index) {
     const publishedPort = this.formValues.PublishedPorts[index];
     const ingress = _.find(this.filteredIngresses, { Name: publishedPort.IngressName });
-    publishedPort.IngressHost = ingress.Host;
+    this.ingressHostnames = ingress.Hosts;
+    publishedPort.IngressHost = this.ingressHostnames.length ? this.ingressHostnames[0] : [];
     this.onChangePublishedPorts();
   }
 
@@ -714,6 +715,7 @@ class KubernetesCreateApplicationController {
 
   refreshIngresses(namespace) {
     this.filteredIngresses = _.filter(this.ingresses, { Namespace: namespace });
+    this.ingressHostnames = this.filteredIngresses.length ? this.filteredIngresses[0].Hosts : [];
     if (!this.publishViaIngressEnabled()) {
       this.formValues.PublishingType = KubernetesApplicationPublishingTypes.INTERNAL;
     }
@@ -877,7 +879,6 @@ class KubernetesCreateApplicationController {
         this.KubernetesIngressService.get(),
       ]);
       this.ingresses = ingresses;
-
       this.resourcePools = _.filter(resourcePools, (resourcePool) => !this.KubernetesNamespaceHelper.isSystemNamespace(resourcePool.Namespace.Name));
       this.formValues.ResourcePool = this.resourcePools[0];
 
