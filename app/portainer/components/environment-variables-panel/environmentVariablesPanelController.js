@@ -5,7 +5,7 @@ class EnvironmentVariablesPanelController {
   constructor($async) {
     this.$async = $async;
     this.mode = 'simple';
-    this.text = '';
+    this.editorText = '';
 
     this.switchEnvMode = this.switchEnvMode.bind(this);
     this.editorUpdate = this.editorUpdate.bind(this);
@@ -26,15 +26,15 @@ class EnvironmentVariablesPanelController {
           editorContent += `${this.envVars[variable].name}=${this.envVars[variable].value || ''}\n`;
         }
       }
-      this.text = editorContent.replace(/\n$/, '');
+      this.editorText = editorContent.replace(/\n$/, '');
     } else {
       this.mode = 'simple';
     }
   }
 
   editorUpdate(cm) {
-    this.text = cm.getValue();
-    this.envVars = this.parseVariables(this.text);
+    this.editorText = cm.getValue();
+    this.envVars = this.parseVariables(this.editorText);
   }
 
   addEnvironmentVariable() {
