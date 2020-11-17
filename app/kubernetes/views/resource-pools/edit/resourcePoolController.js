@@ -4,7 +4,11 @@ import filesizeParser from 'filesize-parser';
 import { KubernetesResourceQuota, KubernetesResourceQuotaDefaults } from 'Kubernetes/models/resource-quota/models';
 import KubernetesResourceReservationHelper from 'Kubernetes/helpers/resourceReservationHelper';
 import KubernetesEventHelper from 'Kubernetes/helpers/eventHelper';
-import { KubernetesResourcePoolFormValues, KubernetesResourcePoolIngressClassAnnotationFormValue, KubernetesResourcePoolIngressClassHostFormValue } from 'Kubernetes/models/resource-pool/formValues';
+import {
+  KubernetesResourcePoolFormValues,
+  KubernetesResourcePoolIngressClassAnnotationFormValue,
+  KubernetesResourcePoolIngressClassHostFormValue,
+} from 'Kubernetes/models/resource-pool/formValues';
 import { KubernetesIngressConverter } from 'Kubernetes/ingress/converter';
 import { KubernetesFormValueDuplicate } from 'Kubernetes/models/application/formValues';
 import KubernetesFormValidationHelper from 'Kubernetes/helpers/formValidationHelper';
@@ -106,7 +110,6 @@ class KubernetesResourcePoolController {
     }
   }
   /* #endregion*/
-
 
   selectTab(index) {
     this.LocalStorage.storeActiveTab('resourcePool', index);
@@ -377,13 +380,11 @@ class KubernetesResourcePoolController {
         await this.getIngresses();
         const ingressClasses = endpoint.Kubernetes.Configuration.IngressClasses;
         this.formValues.IngressClasses = KubernetesIngressConverter.ingressClassesToFormValues(ingressClasses, this.ingresses);
-        /* _.map(this.formValues.IngressClasses, (ic) => {
-          if (ic.Hosts) {
-            _.map(ic.Hosts, (host) => {
-              host.IsNew = false;
-            });
+        _.forEach(this.formValues.IngressClasses, (ic) => {
+          if (ic.Hosts.length === 0) {
+            ic.Hosts.push(new KubernetesResourcePoolIngressClassHostFormValue());
           }
-        }); */
+        });
       }
     } catch (err) {
       this.Notifications.error('Failure', err, 'Unable to load view data');
