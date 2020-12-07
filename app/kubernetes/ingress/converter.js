@@ -140,7 +140,9 @@ export class KubernetesIngressConverter {
           return h === host || h.PreviousHost === host;
         });
         host = updatedHost.Host || updatedHost;
-
+        if (updatedHost.NeedsDeletion) {
+          return;
+        }
         const rule = new KubernetesIngressRuleCreatePayload();
         KubernetesCommonHelper.assignOrDeleteIfEmpty(rule, 'host', host);
         rule.http.paths = _.map(paths, (p) => {
@@ -153,10 +155,12 @@ export class KubernetesIngressConverter {
         hostsWithRules.push(host);
         return rule;
       });
-      const hostsWithoutRules = _.without(
-        _.map(data.Hosts, (h) => h.Host || h),
-        ...hostsWithRules
+      rules = _.without(rules, undefined);
+      const keptHosts = _.without(
+        _.map(data.Hosts, (h) => (h.NeedsDeletion ? undefined : h.Host || h)),
+        undefined
       );
+      const hostsWithoutRules = _.without(keptHosts, ...hostsWithRules);
       const emptyRules = _.map(hostsWithoutRules, (host) => {
         return { host: host };
       });
