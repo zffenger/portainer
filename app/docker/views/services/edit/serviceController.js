@@ -463,7 +463,7 @@ angular.module('portainer.docker').controller('ServiceController', [
           Interval: ServiceHelper.translateHumanDurationToNanos(service.HealthCheck.Interval),
           Timeout: ServiceHelper.translateHumanDurationToNanos(service.HealthCheck.Timeout),
           StartPeriod: ServiceHelper.translateHumanDurationToNanos(service.HealthCheck.StartPeriod),
-          Retries: service.HealthCheck.Retries || 0,
+          Retries: service.HealthCheck.Retries || 3,
         };
       }
 
