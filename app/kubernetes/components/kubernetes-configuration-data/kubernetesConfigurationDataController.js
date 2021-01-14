@@ -35,6 +35,7 @@ class KubernetesConfigurationDataController {
 
   async editorUpdateAsync(cm) {
     this.formValues.DataYaml = cm.getValue();
+    this.isEditorDirty = true;
   }
 
   editorUpdate(cm) {

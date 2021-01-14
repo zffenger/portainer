@@ -8,6 +8,8 @@ angular
   .controller('CreateStackController', function (
     $scope,
     $state,
+    $window,
+    ModalService,
     StackService,
     Authentication,
     Notifications,
@@ -36,6 +38,13 @@ angular
       formValidationError: '',
       actionInProgress: false,
       StackType: null,
+      isEditorDirty: false,
+    };
+
+    $window.onbeforeunload = () => {
+      if ($scope.state.Method === 'editor' && $scope.formValues.StackFileContent && $scope.state.isEditorDirty) {
+        return '';
+      }
     };
 
     $scope.addEnvironmentVariable = function () {
@@ -142,6 +151,7 @@ angular
         })
         .then(function success() {
           Notifications.success('Stack successfully deployed');
+          $scope.state.isEditorDirty = false;
           $state.go('docker.stacks');
         })
         .catch(function error(err) {
@@ -154,6 +164,7 @@ angular
 
     $scope.editorUpdate = function (cm) {
       $scope.formValues.StackFileContent = cm.getValue();
+      $scope.state.isEditorDirty = true;
     };
 
     $scope.onChangeTemplate = async function onChangeTemplate(template) {
@@ -187,6 +198,21 @@ angular
         Notifications.error('Failure', err, 'Unable to retrieve the ComposeSyntaxMaxVersion');
       }
     }
+
+    this.uiCanExit = async function () {
+      if ($scope.state.Method === 'editor' && $scope.formValues.StackFileContent && $scope.state.isEditorDirty) {
+        return ModalService.confirmAsync({
+          title: 'Are you sure ?',
+          message: 'You currently have unsaved changes in the editor. Are you sure you want to leave?',
+          buttons: {
+            confirm: {
+              label: 'Yes',
+              className: 'btn-danger',
+            },
+          },
+        });
+      }
+    };
 
     initView();
   });
