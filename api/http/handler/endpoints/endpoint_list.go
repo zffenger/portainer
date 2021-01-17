@@ -16,7 +16,7 @@ import (
 
 // @summary List endpoints
 // @description
-// @tags Endpoints
+// @tags endpoints
 // @security ApiKeyAuth
 // @accept json
 // @produce json
