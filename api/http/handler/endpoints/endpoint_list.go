@@ -17,7 +17,7 @@ import (
 // @summary List endpoints
 // @description
 // @tags endpoints
-// @security ApiKeyAuth
+// @security jwt
 // @accept json
 // @produce json
 // @param start query int false "Start searching from"
