@@ -4376,6 +4376,7 @@ var doc = `{
                         "jwt": []
                     }
                 ],
+                "description": "Use this endpoint to upload TLS files.\n**Access policy**: administrator",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -4385,7 +4386,8 @@ var doc = `{
                 "tags": [
                     "upload"
                 ],
-                "summary": "Upload TLS file",
+                "summary": "Upload TLS files",
+                "operationId": "UploadTLS",
                 "parameters": [
                     {
                         "enum": [
@@ -4394,21 +4396,21 @@ var doc = `{
                             "key"
                         ],
                         "type": "string",
-                        "description": "certificate type",
+                        "description": "TLS file type. Valid values are 'ca', 'cert' or 'key'.",
                         "name": "certificate",
                         "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
-                        "description": "folder name",
+                        "description": "Folder where the TLS file will be stored. Will be created if not existing",
                         "name": "folder",
-                        "in": "query",
+                        "in": "formData",
                         "required": true
                     },
                     {
                         "type": "file",
-                        "description": "file",
+                        "description": "The file to upload",
                         "name": "file",
                         "in": "formData",
                         "required": true
@@ -4416,13 +4418,13 @@ var doc = `{
                 ],
                 "responses": {
                     "204": {
-                        "description": ""
+                        "description": "Success"
                     },
                     "400": {
-                        "description": ""
+                        "description": "Invalid request"
                     },
                     "500": {
-                        "description": ""
+                        "description": "Server error"
                     }
                 }
             }
