@@ -4013,9 +4013,7 @@ var doc = `{
                         "jwt": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
+                "description": "List team memberships. Access is only available to administrators and team leaders.\n**Access policy**: admin",
                 "produces": [
                     "application/json"
                 ],
@@ -4023,9 +4021,10 @@ var doc = `{
                     "team_memberships"
                 ],
                 "summary": "List team memberships",
+                "operationId": "TeamMembershipList",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Success",
                         "schema": {
                             "type": "array",
                             "items": {
@@ -4033,8 +4032,14 @@ var doc = `{
                             }
                         }
                     },
+                    "400": {
+                        "description": "Invalid request"
+                    },
+                    "403": {
+                        "description": "Permission denied"
+                    },
                     "500": {
-                        "description": ""
+                        "description": "Server error"
                     }
                 }
             },
@@ -4044,6 +4049,7 @@ var doc = `{
                         "jwt": []
                     }
                 ],
+                "description": "Create a new team memberships. Access is only available to administrators leaders of the associated team.\n**Access policy**: admin",
                 "consumes": [
                     "application/json"
                 ],
@@ -4053,10 +4059,11 @@ var doc = `{
                 "tags": [
                     "team_memberships"
                 ],
-                "summary": "Add user to team",
+                "summary": "Create a new team membership",
+                "operationId": "TeamMembershipCreate",
                 "parameters": [
                     {
-                        "description": "membership data",
+                        "description": "Team membership details",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -4067,13 +4074,25 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "TeamMembership",
+                        "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/portainer.TeamMembership"
                         }
                     },
+                    "204": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    },
+                    "403": {
+                        "description": "Permission denied to manage memberships"
+                    },
+                    "409": {
+                        "description": "Team membership already registered"
+                    },
                     "500": {
-                        "description": ""
+                        "description": "Server error"
                     }
                 }
             }
@@ -4085,6 +4104,7 @@ var doc = `{
                         "jwt": []
                     }
                 ],
+                "description": "Update a team membership. Access is only available to administrators leaders of the associated team.\n**Access policy**: restricted",
                 "consumes": [
                     "application/json"
                 ],
@@ -4094,17 +4114,18 @@ var doc = `{
                 "tags": [
                     "team_memberships"
                 ],
-                "summary": "Update team membership",
+                "summary": "Update a team membership",
+                "operationId": "TeamMembershipUpdate",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "membership id",
+                        "type": "integer",
+                        "description": "Team membership identifier",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "membership data",
+                        "description": "Team membership details",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -4115,22 +4136,25 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "TeamMembership",
+                        "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/portainer.TeamMembership"
                         }
                     },
+                    "204": {
+                        "description": "Success"
+                    },
                     "400": {
-                        "description": ""
+                        "description": "Invalid request"
                     },
                     "403": {
-                        "description": ""
+                        "description": "Permission denied"
                     },
                     "404": {
-                        "description": ""
+                        "description": "TeamMembership not found"
                     },
                     "500": {
-                        "description": ""
+                        "description": "Server error"
                     }
                 }
             },
@@ -6406,7 +6430,7 @@ var doc = `{
                     "description": "Deprecated in DBVersion == 18",
                     "type": "array",
                     "items": {
-                        "description": "User Identifier",
+                        "description": "User identifier",
                         "type": "integer",
                         "example": 1
                     }
@@ -6551,7 +6575,7 @@ var doc = `{
                     "description": "Deprecated in DBVersion == 18",
                     "type": "array",
                     "items": {
-                        "description": "User Identifier",
+                        "description": "User identifier",
                         "type": "integer",
                         "example": 1
                     }
@@ -6860,7 +6884,7 @@ var doc = `{
                     "description": "Deprecated fields\nDeprecated in DBVersion == 18",
                     "type": "array",
                     "items": {
-                        "description": "User Identifier",
+                        "description": "User identifier",
                         "type": "integer",
                         "example": 1
                     }
@@ -8135,29 +8159,59 @@ var doc = `{
         },
         "teammemberships.teamMembershipCreatePayload": {
             "type": "object",
+            "required": [
+                "role",
+                "teamID",
+                "userID"
+            ],
             "properties": {
                 "role": {
-                    "type": "integer"
+                    "description": "Role for the user inside the team (1 for leader and 2 for regular member)",
+                    "type": "integer",
+                    "enum": [
+                        1,
+                        2
+                    ],
+                    "example": 1
                 },
                 "teamID": {
-                    "type": "integer"
+                    "description": "Team identifier",
+                    "type": "integer",
+                    "example": 1
                 },
                 "userID": {
-                    "type": "integer"
+                    "description": "User identifier",
+                    "type": "integer",
+                    "example": 1
                 }
             }
         },
         "teammemberships.teamMembershipUpdatePayload": {
             "type": "object",
+            "required": [
+                "role",
+                "teamID",
+                "userID"
+            ],
             "properties": {
                 "role": {
-                    "type": "integer"
+                    "description": "Role for the user inside the team (1 for leader and 2 for regular member)",
+                    "type": "integer",
+                    "enum": [
+                        1,
+                        2
+                    ],
+                    "example": 1
                 },
                 "teamID": {
-                    "type": "integer"
+                    "description": "Team identifier",
+                    "type": "integer",
+                    "example": 1
                 },
                 "userID": {
-                    "type": "integer"
+                    "description": "User identifier",
+                    "type": "integer",
+                    "example": 1
                 }
             }
         },
