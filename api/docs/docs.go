@@ -3758,16 +3758,18 @@ var doc = `{
                         "jwt": []
                     }
                 ],
+                "description": "List tags.\n**Access policy**: administrator",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "tags"
                 ],
-                "summary": "Fetches the list of tags",
+                "summary": "List tags",
+                "operationId": "TagList",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Success",
                         "schema": {
                             "type": "array",
                             "items": {
@@ -3776,7 +3778,7 @@ var doc = `{
                         }
                     },
                     "500": {
-                        "description": ""
+                        "description": "Server error"
                     }
                 }
             },
@@ -3786,16 +3788,18 @@ var doc = `{
                         "jwt": []
                     }
                 ],
+                "description": "Create a new tag.\n**Access policy**: administrator",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "tags"
                 ],
-                "summary": "Create a tag",
+                "summary": "Create a new tag",
+                "operationId": "TagCreate",
                 "parameters": [
                     {
-                        "description": "tag info",
+                        "description": "Tag details",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -3806,16 +3810,16 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Success",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/portainer.Tag"
-                            }
+                            "$ref": "#/definitions/portainer.Tag"
                         }
                     },
+                    "409": {
+                        "description": "Tag name exists"
+                    },
                     "500": {
-                        "description": ""
+                        "description": "Server error"
                     }
                 }
             }
@@ -3827,17 +3831,22 @@ var doc = `{
                         "jwt": []
                     }
                 ],
+                "description": "Remove a tag.\n**Access policy**: administrator",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "tags"
                 ],
-                "summary": "Delete a tag",
+                "summary": "Remove a tag",
+                "operationId": "TagDelete",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "tag id",
+                        "description": "Tag identifier",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -3845,10 +3854,19 @@ var doc = `{
                 ],
                 "responses": {
                     "204": {
-                        "description": ""
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    },
+                    "403": {
+                        "description": "Permission denied"
+                    },
+                    "404": {
+                        "description": "Tag not found"
                     },
                     "500": {
-                        "description": ""
+                        "description": "Server error"
                     }
                 }
             }
@@ -6264,7 +6282,9 @@ var doc = `{
                     "description": "Deprecated in DBVersion == 18",
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "description": "User identifier",
+                        "type": "integer",
+                        "example": 1
                     }
                 },
                 "AzureCredentials": {
@@ -6407,7 +6427,9 @@ var doc = `{
                     "description": "Deprecated in DBVersion == 18",
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "description": "User identifier",
+                        "type": "integer",
+                        "example": 1
                     }
                 },
                 "Description": {
@@ -6714,7 +6736,9 @@ var doc = `{
                     "description": "Deprecated fields\nDeprecated in DBVersion == 18",
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "description": "User identifier",
+                        "type": "integer",
+                        "example": 1
                     }
                 },
                 "Gitlab": {
@@ -7974,9 +7998,14 @@ var doc = `{
         },
         "tags.tagCreatePayload": {
             "type": "object",
+            "required": [
+                "name"
+            ],
             "properties": {
                 "name": {
-                    "type": "string"
+                    "description": "Name",
+                    "type": "string",
+                    "example": "org/acme"
                 }
             }
         },
