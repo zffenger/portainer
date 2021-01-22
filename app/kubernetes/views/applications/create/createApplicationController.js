@@ -184,7 +184,8 @@ class KubernetesCreateApplicationController {
       storageClass = this.storageClasses[0];
     }
 
-    this.formValues.PersistedFolders.push(new KubernetesApplicationPersistedFolderFormValue(storageClass));
+    const newPf = new KubernetesApplicationPersistedFolderFormValue(storageClass);
+    this.formValues.PersistedFolders.push(newPf);
     this.resetDeploymentType();
   }
 
@@ -214,6 +215,7 @@ class KubernetesCreateApplicationController {
     this.formValues.PersistedFolders[index].UseNewVolume = true;
     this.formValues.PersistedFolders[index].ExistingVolume = null;
     this.state.persistedFoldersUseExistingVolumes = !_.reduce(this.formValues.PersistedFolders, (acc, pf) => acc && pf.UseNewVolume, true);
+    this.validatePersistedFolders();
   }
 
   useExistingVolume(index) {
@@ -570,6 +572,25 @@ class KubernetesCreateApplicationController {
     const changes = JsonPatch.compare(this.savedFormValues, this.formValues);
     this.editChanges = _.filter(changes, (change) => !_.includes(change.path, '$$hashKey') && change.path !== '/ApplicationType');
     return !this.editChanges.length;
+  }
+
+  /* #region  PERSISTED FOLDERS */
+  /* #region  BUTTONS STATES */
+  isAddPersistentFolderButtonShowed() {
+    return !this.isEditAndStatefulSet() && this.formValues.Containers.length <= 1;
+  }
+
+  isNewVolumeButtonDisabled(index) {
+    return this.isEditAndExistingPersistedFolder(index);
+  }
+
+  isExistingVolumeButtonDisabled() {
+    return !this.hasAvailableVolumes() || (this.isEdit && this.application.ApplicationType === this.ApplicationTypes.STATEFULSET);
+  }
+  /* #endregion */
+
+  hasAvailableVolumes() {
+    return this.availableVolumes.length > 0;
   }
 
   isEditAndExistingPersistedFolder(index) {
@@ -953,6 +974,7 @@ class KubernetesCreateApplicationController {
               }
             });
           }
+          await this.refreshNamespaceData(namespace);
         } else {
           this.formValues.AutoScaler = KubernetesApplicationHelper.generateAutoScalerFormValueFromHorizontalPodAutoScaler(null, this.formValues.ReplicaCount);
           this.formValues.OriginalIngressClasses = angular.copy(this.ingresses);
