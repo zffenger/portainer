@@ -2,8 +2,7 @@ import { parseVariables } from './utils';
 
 export default class EnvironmentVariablesPanelController {
   /* @ngInject */
-  constructor($async) {
-    this.$async = $async;
+  constructor() {
     this.mode = 'simple';
     this.editorText = '';
 
@@ -14,14 +13,14 @@ export default class EnvironmentVariablesPanelController {
 
   switchEnvMode() {
     if (this.mode === 'simple') {
+      const editorText = this.envVars
+        .filter((variable) => variable.name)
+        .map((variable) => `${variable.name}=${variable.value || ''}`)
+        .join('\n');
+
+      this.editorText = editorText;
+
       this.mode = 'advanced';
-      let editorContent = '';
-      for (let variable in this.envVars) {
-        if (this.envVars[variable].name) {
-          editorContent += `${this.envVars[variable].name}=${this.envVars[variable].value || ''}\n`;
-        }
-      }
-      this.editorText = editorContent.replace(/\n$/, '');
     } else {
       this.mode = 'simple';
     }
