@@ -5,15 +5,15 @@ export default class EnvironmentVariablesSimpleModeController {
     this.$async = $async;
   }
 
-  addEnvironmentVariable() {
+  add() {
     this.onChange([...this.ngModel, { name: '', value: '' }]);
   }
 
-  removeEnvironmentVariable(index) {
+  remove(index) {
     this.onChange(this.ngModel.filter((_, i) => i !== index));
   }
 
-  removeEnvironmentVariableValue(index) {
+  removeValue(index) {
     this.onChange(this.ngModel.map((e, i) => (i === index ? { name: e.name } : e)));
   }
 
