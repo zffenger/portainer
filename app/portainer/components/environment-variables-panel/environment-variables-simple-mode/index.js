@@ -1,5 +1,7 @@
 import angular from 'angular';
 
+import './environment-variables-simple-mode.css';
+
 import controller from './environment-variables-simple-mode.controller';
 
 angular.module('portainer.app').component('environmentVariablesSimpleMode', {
