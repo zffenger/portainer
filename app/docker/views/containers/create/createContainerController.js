@@ -77,8 +77,7 @@ angular.module('portainer.docker').controller('CreateContainerController', [
       MemoryReservation: 0,
       CmdMode: 'default',
       EntrypointMode: 'default',
-      EnvMode: 'simple',
-      EnvContent: [],
+      EnvVars: [],
       NodeName: null,
       capabilities: [],
       LogDriverName: '',
@@ -228,17 +227,7 @@ angular.module('portainer.docker').controller('CreateContainerController', [
     }
 
     function prepareEnvironmentVariables(config) {
-      var env = [];
-      $scope.formValues.EnvContent.forEach(function (v) {
-        if (v.name && v.value) {
-          env.push(v.name + '=' + v.value);
-        } else if (v.value == '') {
-          env.push(v.name + '=' + '');
-        } else {
-          env.push(v.name);
-        }
-      });
-      config.Env = env;
+      config.Env = $scope.formValues.EnvVars.filter((variable) => variable.name).map(({ name, value }) => (value || value === '' ? `${name}=${value}` : name));
     }
 
     function prepareVolumes(config) {
@@ -504,18 +493,15 @@ angular.module('portainer.docker').controller('CreateContainerController', [
     }
 
     function loadFromContainerEnvironmentVariables() {
-      var envArr = [];
-      for (var e in $scope.config.Env) {
-        if ({}.hasOwnProperty.call($scope.config.Env, e)) {
-          if (_.includes($scope.config.Env[e], '=')) {
-            var arr = $scope.config.Env[e].split(/\=(.*)/);
-            envArr.push({ name: arr[0], value: arr[1] });
-          } else {
-            envArr.push({ name: $scope.config.Env[e] });
-          }
-        }
-      }
-      $scope.formValues.EnvContent = envArr;
+      $scope.formValues.EnvVars = $scope.config.Env
+        ? $scope.config.Env.map((variableString) => {
+            if (!variableString.includes('=')) {
+              return variableString;
+            }
+            const [name, value] = variableString.split(/\=(.*)/);
+            return { name, value };
+          })
+        : [];
     }
 
     function loadFromContainerLabels() {
