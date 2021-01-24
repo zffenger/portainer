@@ -1,4 +1,4 @@
-<form class="form-horizontal" style="margin-top: 15px;">
+<ng-form class="form-horizontal" class="environment-variables-panel">
   <div class="form-group">
     <div class="col-sm-12 form-section-title" style="margin-top: 10px; margin-left: 15px; width: 98%;">
       Environment variables
@@ -6,57 +6,63 @@
     <div class="col-sm-12">
       <p>{{::$ctrl.explanation}}</p>
       <p>
-        <a class="small interactive" ng-if="$ctrl.mode == 'simple'" ng-click="$ctrl.switchEnvMode();">
-          <i class="fa fa-list-ol space-right" aria-hidden="true"></i> Advanced mode
+        <a class="small interactive" ng-click="$ctrl.switchEnvMode()">
+          <i class="fa fa-list-ol space-right" aria-hidden="true"></i> {{ $ctrl.mode == 'simple' ? 'Advanced' : 'Simple' }} mode
         </a>
-        <a class="small interactive" ng-if="$ctrl.mode == 'advanced'" ng-click="$ctrl.switchEnvMode();"> <i class="fa fa-edit space-right" aria-hidden="true"></i> Simple mode </a>
       </p>
     </div>
-    <div class="col-sm-12 small text-muted" ng-if="$ctrl.mode == 'simple'">
-      <i class="fa fa-info-circle blue-icon" aria-hidden="true" style="margin-right: 2px;"></i>
-      Switch to advanced mode to copy & paste multiple variables
+
+    <div ng-if="$ctrl.mode == 'simple'">
+      <div class="col-sm-12 small text-muted">
+        <i class="fa fa-info-circle blue-icon space-right" aria-hidden="true"></i>
+        Switch to advanced mode to copy & paste multiple variables
+      </div>
+      <div class="form-group">
+        <div class="col-sm-12" style="display: flex; align-items: center; margin-left: 10px; margin-top: 10px;">
+          <button type="button" class="btn btn-sm btn-default" ng-click="$ctrl.addEnvironmentVariable()">
+            <i class="fa fa-plus-circle" aria-hidden="true"></i> Add an environment variable
+          </button>
+          <button type="button" class="btn btn-sm btn-default" ngf-select="$ctrl.addFromFile($file)" ngf-accept="'.env'" ngf-max-size="1MB" ngf-model-invalid="errorFile">
+            <i class="fa fa-file-upload" aria-hidden="true"></i> Load variables from .env file
+          </button>
+          <span style="margin-left: 5px;" ng-if="errorFile.$error == 'maxSize'">
+            <i class="fa fa-times red-icon" aria-hidden="true"></i>
+            File too large! Try uploading a file smaller than 1MB
+          </span>
+        </div>
+      </div>
+      <div class="col-sm-12 form-inline env-items-list">
+        <div ng-repeat="variable in $ctrl.envVars" class="env-item">
+          <div class="input-group col-sm-5 input-group-sm env-item-key">
+            <span class="input-group-addon">name</span>
+            <input type="text" class="form-control" ng-model="variable.name" placeholder="e.g. FOO" />
+          </div>
+          <div ng-if="variable.value !== undefined" class="col-sm-6 env-item-value">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">value</span>
+              <input type="text" class="form-control" ng-model="variable.value" placeholder="e.g. bar" ng-trim="false" />
+            </div>
+            <button class="btn btn-sm btn-primary" type="button" ng-click="$ctrl.removeEnvironmentVariableValue($index)">
+              <i class="fa fa-minus" aria-hidden="true"></i> Remove value
+            </button>
+          </div>
+          <button class="btn btn-sm btn-primary" type="button" ng-if="variable.value === undefined" ng-click="variable.value = ''">
+            <i class="fa fa-plus" aria-hidden="true"></i> Add value
+          </button>
+          <button class="btn btn-sm btn-danger" type="button" ng-click="$ctrl.removeEnvironmentVariable($index)">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
     </div>
-    <div class="col-sm-12 small text-muted" ng-if="$ctrl.mode == 'advanced'">
-      <i class="fa fa-info-circle blue-icon" aria-hidden="true" style="margin-right: 2px;"></i>
+  </div>
+  <div ng-if="$ctrl.mode == 'advanced'">
+    <div class="col-sm-12 small text-muted">
+      <i class="fa fa-info-circle blue-icon space-right" aria-hidden="true"></i>
       Switch to simple mode to define variables line by line, or load from .env file
     </div>
-    <div class="form-group" ng-if="$ctrl.mode == 'simple'">
-      <div class="col-sm-12" style="display: flex; align-items: center; margin-left: 10px; margin-top: 10px;">
-        <button type="button" class="btn btn-sm btn-default" ng-click="$ctrl.addEnvironmentVariable()">
-          <i class="fa fa-plus-circle" aria-hidden="true"></i> Add an evironment variable
-        </button>
-        <button type="button" class="btn btn-sm btn-default" ngf-select="$ctrl.addFromFile($file)" ngf-accept="'.env'" ngf-max-size="1MB" ngf-model-invalid="errorFile">
-          <i class="fa fa-file-upload" aria-hidden="true"></i> Load variables from .env file
-        </button>
-        <span style="margin-left: 5px;" ng-if="errorFile.$error == 'maxSize'">
-          <i class="fa fa-times red-icon" aria-hidden="true"></i>
-          File too large! Try uploading a file smaller than 1MB
-        </span>
-      </div>
-    </div>
-    <div class="col-sm-12 form-inline" style="margin-top: 10px;" ng-if="$ctrl.mode == 'simple'">
-      <div ng-repeat="variable in $ctrl.envVars" style="margin-top: 2px;">
-        <div class="input-group col-sm-5 input-group-sm">
-          <span class="input-group-addon">name</span>
-          <input type="text" class="form-control" ng-model="variable.name" placeholder="e.g. FOO" />
-        </div>
-        <div class="input-group col-sm-5 input-group-sm" ng-if="variable.value !== undefined">
-          <span class="input-group-addon">value</span>
-          <input type="text" class="form-control" ng-model="variable.value" placeholder="e.g. bar" ng-trim="false" />
-        </div>
-        <button class="btn btn-sm btn-primary" type="button" ng-if="variable.value === undefined" ng-click="variable.value=''">
-          <i class="fa fa-plus" aria-hidden="true"></i> Add value
-        </button>
-        <button class="btn btn-sm btn-primary" type="button" ng-if="variable.value !== undefined" ng-click="$ctrl.removeEnvironmentVariableValue($index)">
-          <i class="fa fa-minus" aria-hidden="true"></i> Remove value
-        </button>
-        <button class="btn btn-sm btn-danger" type="button" ng-click="$ctrl.removeEnvironmentVariable($index)">
-          <i class="fa fa-trash" aria-hidden="true"></i>
-        </button>
-      </div>
+    <div class="form-group" style="margin-left: 1px;">
+      <code-editor identifier="environment-variables-editor" placeholder="e.g. key=value" value="$ctrl.editorText" yml="false" on-change="($ctrl.editorUpdate)"></code-editor>
     </div>
   </div>
-  <div class="form-group" ng-if="$ctrl.mode == 'advanced'" style="margin-left: 1px;">
-    <code-editor identifier="environment-variables-editor" placeholder="e.g. key=value" value="$ctrl.editorText" yml="false" on-change="($ctrl.editorUpdate)"></code-editor>
-  </div>
-</form>
+</ng-form>
