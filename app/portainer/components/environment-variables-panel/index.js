@@ -1,8 +1,8 @@
-import EnvironmentVariablesPanelController from './environmentVariablesPanelController.js';
+import controller from './environmentVariablesPanel.controller.js';
 
 angular.module('portainer.app').component('environmentVariablesPanel', {
   templateUrl: './environmentVariablesPanel.html',
-  controller: EnvironmentVariablesPanelController,
+  controller,
   bindings: {
     envVars: '=',
     resourceType: '<?',

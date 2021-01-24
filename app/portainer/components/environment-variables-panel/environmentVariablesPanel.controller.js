@@ -1,6 +1,6 @@
 import _ from 'lodash-es';
 
-class EnvironmentVariablesPanelController {
+export default class EnvironmentVariablesPanelController {
   /* @ngInject */
   constructor($async) {
     this.$async = $async;
@@ -88,5 +88,3 @@ class EnvironmentVariablesPanelController {
     });
   }
 }
-
-export default EnvironmentVariablesPanelController;
