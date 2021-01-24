@@ -5,6 +5,6 @@ angular.module('portainer.app').component('environmentVariablesPanel', {
   controller,
   bindings: {
     envVars: '=',
-    resourceType: '<?',
+    explanation: '@',
   },
 });
