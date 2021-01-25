@@ -24,6 +24,10 @@ export function parseDotEnvFile(src) {
  * @returns {[{name: string, value: string}]} array of {name, value}
  */
 export function parseArrayOfStrings(array) {
+  if (!array) {
+    return [];
+  }
+
   return _.compact(
     array.map((variableString) => {
       if (!variableString.includes('=')) {
@@ -45,5 +49,9 @@ export function parseArrayOfStrings(array) {
  * @returns {[string]} array of `name=value`
  */
 export function convertToArrayOfStrings(array) {
+  if (!array) {
+    return [];
+  }
+
   return array.filter((variable) => variable.name).map(({ name, value }) => (value || value === '' ? `${name}=${value}` : name));
 }

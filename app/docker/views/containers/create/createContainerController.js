@@ -496,7 +496,7 @@ angular.module('portainer.docker').controller('CreateContainerController', [
     }
 
     function loadFromContainerEnvironmentVariables() {
-      $scope.formValues.Env = $scope.config.Env ? envVarsUtils.parseArrayOfStrings($scope.config.Env) : [];
+      $scope.formValues.Env = envVarsUtils.parseArrayOfStrings($scope.config.Env);
     }
 
     function loadFromContainerLabels() {

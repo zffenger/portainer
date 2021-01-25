@@ -265,7 +265,7 @@ angular.module('portainer.docker').controller('CreateServiceController', [
     }
 
     function prepareEnvConfig(config, input) {
-      config.TaskTemplate.ContainerSpec.Env = input.Env ? envVarsUtils.convertToArrayOfStrings(input.Env) : [];
+      config.TaskTemplate.ContainerSpec.Env = envVarsUtils.convertToArrayOfStrings(input.Env);
     }
 
     function prepareLabelsConfig(config, input) {
