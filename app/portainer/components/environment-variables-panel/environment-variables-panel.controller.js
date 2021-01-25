@@ -23,16 +23,20 @@ export default class EnvironmentVariablesPanelController {
     }
   }
 
-  onChange(envVars) {
-    this.envVars = envVars;
-  }
-
-  handleSimpleChange(envVars) {
-    this.onChange(envVars);
+  handleSimpleChange(value) {
+    this.handleChange(value);
   }
 
   editorUpdate(cm) {
     this.editorText = cm.getValue();
-    this.onChange(parseDotEnvFile(this.editorText));
+    this.handleChange(parseDotEnvFile(this.editorText));
+  }
+
+  handleChange(value) {
+    if (!this.onChange) {
+      this.envVars = value;
+    } else {
+      this.onChange(value);
+    }
   }
 }

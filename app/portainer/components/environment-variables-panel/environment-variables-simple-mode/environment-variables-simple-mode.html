@@ -20,16 +20,23 @@
     <div ng-repeat="variable in $ctrl.ngModel" class="env-item">
       <div class="input-group col-sm-5 input-group-sm env-item-key">
         <span class="input-group-addon">name</span>
-        <input type="text" class="form-control" ng-model="variable.name" placeholder="e.g. FOO" />
+        <input
+          type="text"
+          class="form-control"
+          ng-model="variable.name"
+          ng-change="$ctrl.onChangeName($index, variable.name)"
+          placeholder="e.g. FOO"
+          ng-disabled="variable.added"
+        />
       </div>
       <div ng-if="$ctrl.hasValue(variable)" class="col-sm-6 env-item-value">
         <div class="input-group input-group-sm">
           <span class="input-group-addon">value</span>
-          <input type="text" class="form-control" ng-model="variable.value" placeholder="e.g. bar" ng-trim="false" />
+          <input type="text" class="form-control" ng-model="variable.value" placeholder="e.g. bar" ng-trim="false" ng-change="$ctrl.onChangeValue($index, variable.value)" />
         </div>
         <button class="btn btn-sm btn-primary" type="button" ng-click="$ctrl.removeValue($index)"> <i class="fa fa-minus" aria-hidden="true"></i> Remove value </button>
       </div>
-      <button class="btn btn-sm btn-primary" type="button" ng-if="!$ctrl.hasValue(variable)" ng-click="variable.value = ''">
+      <button class="btn btn-sm btn-primary" type="button" ng-if="!$ctrl.hasValue(variable)" ng-click="$ctrl.onChangeValue($index, '')">
         <i class="fa fa-plus" aria-hidden="true"></i> Add value
       </button>
       <button class="btn btn-sm btn-danger" type="button" ng-click="$ctrl.remove($index)">

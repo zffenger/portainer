@@ -41,4 +41,12 @@ export default class EnvironmentVariablesSimpleModeController {
       temporaryFileReader.onerror = (error) => reject(error);
     });
   }
+
+  onChangeName(index, name) {
+    this.onChange(this.ngModel.map((v, i) => (i !== index ? v : { ...v, name })));
+  }
+
+  onChangeValue(index, value) {
+    this.onChange(this.ngModel.map((v, i) => (i !== index ? v : { ...v, value })));
+  }
 }

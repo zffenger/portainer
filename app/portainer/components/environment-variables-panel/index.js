@@ -10,5 +10,6 @@ angular.module('portainer.app').component('environmentVariablesPanel', {
   bindings: {
     envVars: '=',
     explanation: '@',
+    onChange: '<',
   },
 });
