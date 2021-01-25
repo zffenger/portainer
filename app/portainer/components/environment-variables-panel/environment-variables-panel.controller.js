@@ -1,4 +1,4 @@
-import { parseDotEnvFile } from '@/portainer/helpers/env-vars';
+import { parseDotEnvFile, convertToArrayOfStrings } from '@/portainer/helpers/env-vars';
 
 export default class EnvironmentVariablesPanelController {
   /* @ngInject */
@@ -13,10 +13,7 @@ export default class EnvironmentVariablesPanelController {
 
   switchEnvMode() {
     if (this.mode === 'simple') {
-      const editorText = this.envVars
-        .filter((variable) => variable.name)
-        .map((variable) => `${variable.name}=${variable.value || ''}`)
-        .join('\n');
+      const editorText = convertToArrayOfStrings(this.envVars).join('\n');
 
       this.editorText = editorText;
 
