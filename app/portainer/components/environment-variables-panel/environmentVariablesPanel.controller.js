@@ -1,4 +1,4 @@
-import { parseVariables } from '@/portainer/helpers/env-vars';
+import { parseDotEnvFile } from '@/portainer/helpers/env-vars';
 
 export default class EnvironmentVariablesPanelController {
   /* @ngInject */
@@ -36,6 +36,6 @@ export default class EnvironmentVariablesPanelController {
 
   editorUpdate(cm) {
     this.editorText = cm.getValue();
-    this.onChange(parseVariables(this.editorText));
+    this.onChange(parseDotEnvFile(this.editorText));
   }
 }

@@ -1,4 +1,4 @@
-import { parseVariables } from '@/portainer/helpers/env-vars';
+import { parseDotEnvFile } from '@/portainer/helpers/env-vars';
 
 export default class EnvironmentVariablesSimpleModeController {
   /* @ngInject */
@@ -28,7 +28,7 @@ export default class EnvironmentVariablesSimpleModeController {
         return;
       }
       const text = await this.getTextFromFile(file);
-      const parsed = parseVariables(text);
+      const parsed = parseDotEnvFile(text);
       this.onChange(this.ngModel.concat(parsed));
     });
   }

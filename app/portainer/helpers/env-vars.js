@@ -1,21 +1,15 @@
 import _ from 'lodash-es';
 
-export function parseVariables(src) {
-  const KEYVAL_REGEX = /^\s*([\w.-]+)\s*=(.*)?\s*$/;
-  const NEWLINES_REGEX = /\n|\r|\r\n/;
+const KEYVAL_REGEX = /^\s*([\w.-]+)\s*=(.*)?\s*$/;
+const NEWLINES_REGEX = /\n|\r|\r\n/;
 
-  return _.filter(
-    _.map(
-      src.split(NEWLINES_REGEX),
-      (line) => {
-        const parsedKeyValArr = line.match(KEYVAL_REGEX);
-        if (parsedKeyValArr != null && parsedKeyValArr.length > 2) {
-          return { name: parsedKeyValArr[1], value: parsedKeyValArr[2] || '' };
-        }
-      },
-      (val) => val
-    )
-  );
+/**
+ * @param  {string} src the source of the .env file
+ *
+ * @returns {[{name: string, value: string}]} array of {name, value}
+ */
+export function parseDotEnvFile(src) {
+  return parseArrayOfStrings(_.compact(src.split(NEWLINES_REGEX)));
 }
 
 /**
@@ -26,13 +20,17 @@ export function parseVariables(src) {
  * @returns {[{name: string, value: string}]} array of {name, value}
  */
 export function parseArrayOfStrings(array) {
-  return array.map((variableString) => {
-    if (!variableString.includes('=')) {
-      return variableString;
-    }
-    const [name, value] = variableString.split(/\=(.*)/);
-    return { name, value };
-  });
+  return _.compact(
+    array.map((variableString) => {
+      if (!variableString.includes('=')) {
+        return { name: variableString };
+      }
+      const parsedKeyValArr = variableString.match(KEYVAL_REGEX);
+      if (parsedKeyValArr != null && parsedKeyValArr.length > 2) {
+        return { name: parsedKeyValArr[1], value: parsedKeyValArr[2] || '' };
+      }
+    })
+  );
 }
 /**
  * converts an array of {name, value} to array of `name=value`, name is always defined
