@@ -71,7 +71,7 @@ angular.module('portainer.docker').controller('CreateServiceController', [
       EntryPoint: '',
       WorkingDir: '',
       User: '',
-      EnvVars: [],
+      Env: [],
       Labels: [],
       ContainerLabels: [],
       Volumes: [],
@@ -265,7 +265,7 @@ angular.module('portainer.docker').controller('CreateServiceController', [
     }
 
     function prepareEnvConfig(config, input) {
-      config.TaskTemplate.ContainerSpec.Env = input.EnvVars ? envVarsUtils.convertToArrayOfStrings(input.EnvVars) : [];
+      config.TaskTemplate.ContainerSpec.Env = input.Env ? envVarsUtils.convertToArrayOfStrings(input.Env) : [];
     }
 
     function prepareLabelsConfig(config, input) {
