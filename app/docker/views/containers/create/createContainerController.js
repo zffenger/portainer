@@ -1,5 +1,8 @@
 import _ from 'lodash-es';
+
+import * as envVarsUtils from '@/portainer/helpers/env-vars';
 import { PorImageRegistryModel } from 'Docker/models/porImageRegistry';
+
 import { ContainerCapabilities, ContainerCapability } from '../../../models/containerCapabilities';
 import { AccessControlFormData } from '../../../../portainer/components/accessControlForm/porAccessControlFormModel';
 import { ContainerDetailsViewModel } from '../../../models/container';
@@ -227,7 +230,7 @@ angular.module('portainer.docker').controller('CreateContainerController', [
     }
 
     function prepareEnvironmentVariables(config) {
-      config.Env = $scope.formValues.EnvVars.filter((variable) => variable.name).map(({ name, value }) => (value || value === '' ? `${name}=${value}` : name));
+      config.Env = envVarsUtils.convertToArrayOfStrings($scope.formValues.EnvVars);
     }
 
     function prepareVolumes(config) {
@@ -493,15 +496,7 @@ angular.module('portainer.docker').controller('CreateContainerController', [
     }
 
     function loadFromContainerEnvironmentVariables() {
-      $scope.formValues.EnvVars = $scope.config.Env
-        ? $scope.config.Env.map((variableString) => {
-            if (!variableString.includes('=')) {
-              return variableString;
-            }
-            const [name, value] = variableString.split(/\=(.*)/);
-            return { name, value };
-          })
-        : [];
+      $scope.formValues.EnvVars = $scope.config.Env ? envVarsUtils.parseArrayOfStrings($scope.config.Env) : [];
     }
 
     function loadFromContainerLabels() {

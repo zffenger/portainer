@@ -1,4 +1,4 @@
-import { parseVariables } from './utils';
+import { parseVariables } from '@/portainer/helpers/env-vars';
 
 export default class EnvironmentVariablesPanelController {
   /* @ngInject */

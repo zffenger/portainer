@@ -1,4 +1,5 @@
-import { parseVariables } from '../utils';
+import { parseVariables } from '@/portainer/helpers/env-vars';
+
 export default class EnvironmentVariablesSimpleModeController {
   /* @ngInject */
   constructor($async) {
