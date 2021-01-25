@@ -80,7 +80,7 @@ angular.module('portainer.docker').controller('CreateContainerController', [
       MemoryReservation: 0,
       CmdMode: 'default',
       EntrypointMode: 'default',
-      EnvVars: [],
+      Env: [],
       NodeName: null,
       capabilities: [],
       LogDriverName: '',
@@ -230,7 +230,7 @@ angular.module('portainer.docker').controller('CreateContainerController', [
     }
 
     function prepareEnvironmentVariables(config) {
-      config.Env = envVarsUtils.convertToArrayOfStrings($scope.formValues.EnvVars);
+      config.Env = envVarsUtils.convertToArrayOfStrings($scope.formValues.Env);
     }
 
     function prepareVolumes(config) {
@@ -496,7 +496,7 @@ angular.module('portainer.docker').controller('CreateContainerController', [
     }
 
     function loadFromContainerEnvironmentVariables() {
-      $scope.formValues.EnvVars = $scope.config.Env ? envVarsUtils.parseArrayOfStrings($scope.config.Env) : [];
+      $scope.formValues.Env = $scope.config.Env ? envVarsUtils.parseArrayOfStrings($scope.config.Env) : [];
     }
 
     function loadFromContainerLabels() {
