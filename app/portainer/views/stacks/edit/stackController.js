@@ -47,12 +47,12 @@ angular.module('portainer.app').controller('StackController', [
     $scope.formValues = {
       Prune: false,
       Endpoint: null,
-      EnvContent: [],
+      Env: [],
     };
 
     $scope.duplicateStack = function duplicateStack(name, endpointId) {
       var stack = $scope.stack;
-      var env = FormHelper.removeInvalidEnvVars($scope.formValues.EnvContent);
+      var env = FormHelper.removeInvalidEnvVars($scope.formValues.Env);
       EndpointProvider.setEndpointID(endpointId);
 
       return StackService.duplicateStack(name, $scope.stackFileContent, env, endpointId, stack.Type).then(onDuplicationSuccess).catch(notifyOnError);
@@ -151,7 +151,7 @@ angular.module('portainer.app').controller('StackController', [
 
     $scope.deployStack = function () {
       var stackFile = $scope.stackFileContent;
-      var env = FormHelper.removeInvalidEnvVars($scope.formValues.EnvContent);
+      var env = FormHelper.removeInvalidEnvVars($scope.formValues.Env);
       var prune = $scope.formValues.Prune;
       var stack = $scope.stack;
 
@@ -241,7 +241,7 @@ angular.module('portainer.app').controller('StackController', [
           var stack = data.stack;
           $scope.groups = data.groups;
           $scope.stack = stack;
-          $scope.formValues.EnvContent = $scope.stack.Env;
+          $scope.formValues.Env = $scope.stack.Env;
 
           let resourcesPromise = Promise.resolve({});
           if (stack.Status === 1) {

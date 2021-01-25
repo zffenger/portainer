@@ -25,7 +25,7 @@ angular
       RepositoryAuthentication: false,
       RepositoryUsername: '',
       RepositoryPassword: '',
-      EnvContent: [],
+      Env: [],
       ComposeFilePathInRepository: 'docker-compose.yml',
       AccessControlData: new AccessControlFormData(),
     };
@@ -50,7 +50,7 @@ angular
     }
 
     function createSwarmStack(name, method) {
-      var env = FormHelper.removeInvalidEnvVars($scope.formValues.EnvContent);
+      var env = FormHelper.removeInvalidEnvVars($scope.formValues.Env);
       const endpointId = +$state.params.endpointId;
 
       if (method === 'template' || method === 'editor') {
@@ -77,7 +77,7 @@ angular
     }
 
     function createComposeStack(name, method) {
-      var env = FormHelper.removeInvalidEnvVars($scope.formValues.EnvContent);
+      var env = FormHelper.removeInvalidEnvVars($scope.formValues.Env);
       const endpointId = +$state.params.endpointId;
 
       if (method === 'editor' || method === 'template') {
