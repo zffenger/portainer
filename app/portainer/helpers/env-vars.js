@@ -9,7 +9,11 @@ const NEWLINES_REGEX = /\n|\r|\r\n/;
  * @returns {[{name: string, value: string}]} array of {name, value}
  */
 export function parseDotEnvFile(src) {
-  return parseArrayOfStrings(_.compact(src.split(NEWLINES_REGEX)));
+  return parseArrayOfStrings(
+    _.compact(src.split(NEWLINES_REGEX))
+      .map((v) => v.trim())
+      .filter((v) => !v.startsWith('#'))
+  );
 }
 
 /**
@@ -25,6 +29,7 @@ export function parseArrayOfStrings(array) {
       if (!variableString.includes('=')) {
         return { name: variableString };
       }
+
       const parsedKeyValArr = variableString.match(KEYVAL_REGEX);
       if (parsedKeyValArr != null && parsedKeyValArr.length > 2) {
         return { name: parsedKeyValArr[1], value: parsedKeyValArr[2] || '' };
