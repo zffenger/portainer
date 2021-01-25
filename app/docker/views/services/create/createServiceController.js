@@ -1,4 +1,6 @@
 import _ from 'lodash-es';
+
+import * as envVarsUtils from '@/portainer/helpers/env-vars';
 import { PorImageRegistryModel } from 'Docker/models/porImageRegistry';
 import { AccessControlFormData } from '../../../../portainer/components/accessControlForm/porAccessControlFormModel';
 
@@ -69,9 +71,7 @@ angular.module('portainer.docker').controller('CreateServiceController', [
       EntryPoint: '',
       WorkingDir: '',
       User: '',
-      Env: [],
-      EnvMode: 'simple',
-      EnvContent: [],
+      EnvVars: [],
       Labels: [],
       ContainerLabels: [],
       Volumes: [],
@@ -265,13 +265,7 @@ angular.module('portainer.docker').controller('CreateServiceController', [
     }
 
     function prepareEnvConfig(config, input) {
-      var env = [];
-      input.EnvContent.forEach(function (v) {
-        if (v.name) {
-          env.push(v.name + '=' + v.value);
-        }
-      });
-      config.TaskTemplate.ContainerSpec.Env = env;
+      config.TaskTemplate.ContainerSpec.Env = input.EnvVars ? envVarsUtils.convertToArrayOfStrings(input.EnvVars) : [];
     }
 
     function prepareLabelsConfig(config, input) {
