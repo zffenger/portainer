@@ -96,6 +96,11 @@ angular.module('portainer.docker').controller('CreateContainerController', [
       mode: '',
     };
 
+    $scope.handleEnvVarChange = handleEnvVarChange;
+    function handleEnvVarChange(value) {
+      $scope.formValues.Env = value;
+    }
+
     $scope.refreshSlider = function () {
       $timeout(function () {
         $scope.$broadcast('rzSliderForceRender');

@@ -99,6 +99,11 @@ angular
       }
     }
 
+    $scope.handleEnvVarChange = handleEnvVarChange;
+    function handleEnvVarChange(value) {
+      $scope.formValues.Env = value;
+    }
+
     $scope.deployStack = function () {
       var name = $scope.formValues.Name;
       var method = $scope.state.Method;

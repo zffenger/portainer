@@ -11,7 +11,7 @@
       <p>There are no environment variables for this service.</p>
     </rd-widget-body>
     <rd-widget-body ng-if="service.EnvironmentVariables.length > 0">
-      <environment-variables-panel is-name-disabled="true" env-vars="service.EnvironmentVariables" on-change="(onChangeEnvVars)"></environment-variables-panel>
+      <environment-variables-panel is-name-disabled="true" ng-model="service.EnvironmentVariables" on-change="(onChangeEnvVars)"></environment-variables-panel>
     </rd-widget-body>
     <rd-widget-footer authorization="DockerServiceUpdate">
       <div class="btn-toolbar" role="toolbar">

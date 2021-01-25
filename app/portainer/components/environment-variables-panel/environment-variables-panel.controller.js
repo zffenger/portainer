@@ -13,7 +13,7 @@ export default class EnvironmentVariablesPanelController {
 
   switchEnvMode() {
     if (this.mode === 'simple') {
-      const editorText = convertToArrayOfStrings(this.envVars).join('\n');
+      const editorText = convertToArrayOfStrings(this.ngModel).join('\n');
 
       this.editorText = editorText;
 
@@ -24,19 +24,11 @@ export default class EnvironmentVariablesPanelController {
   }
 
   handleSimpleChange(value) {
-    this.handleChange(value);
+    this.onChange(value);
   }
 
   editorUpdate(cm) {
     this.editorText = cm.getValue();
-    this.handleChange(parseDotEnvFile(this.editorText));
-  }
-
-  handleChange(value) {
-    if (!this.onChange) {
-      this.envVars = value;
-    } else {
-      this.onChange(value);
-    }
+    this.onChange(parseDotEnvFile(this.editorText));
   }
 }

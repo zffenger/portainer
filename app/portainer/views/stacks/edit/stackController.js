@@ -50,6 +50,11 @@ angular.module('portainer.app').controller('StackController', [
       Env: [],
     };
 
+    $scope.handleEnvVarChange = handleEnvVarChange;
+    function handleEnvVarChange(value) {
+      $scope.formValues.Env = value;
+    }
+
     $scope.duplicateStack = function duplicateStack(name, endpointId) {
       var stack = $scope.stack;
       var env = FormHelper.removeInvalidEnvVars($scope.formValues.Env);

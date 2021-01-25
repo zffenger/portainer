@@ -8,7 +8,7 @@ angular.module('portainer.app').component('environmentVariablesPanel', {
   templateUrl: './environment-variables-panel.html',
   controller,
   bindings: {
-    envVars: '=',
+    ngModel: '<',
     explanation: '@',
     onChange: '<',
   },

@@ -110,6 +110,11 @@ angular.module('portainer.docker').controller('CreateServiceController', [
 
     $scope.allowBindMounts = false;
 
+    $scope.handleEnvVarChange = handleEnvVarChange;
+    function handleEnvVarChange(value) {
+      $scope.formValues.Env = value;
+    }
+
     $scope.refreshSlider = function () {
       $timeout(function () {
         $scope.$broadcast('rzSliderForceRender');
