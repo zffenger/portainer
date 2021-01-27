@@ -86,8 +86,8 @@ func initSwarmStackManager(assetsPath string, dataStorePath string, signatureSer
 	return exec.NewSwarmStackManager(assetsPath, dataStorePath, signatureService, fileService, reverseTunnelService)
 }
 
-func initKubernetesDeployer(assetsPath string) portainer.KubernetesDeployer {
-	return exec.NewKubernetesDeployer(assetsPath)
+func initKubernetesDeployer(dataStore portainer.DataStore, reverseTunnelService portainer.ReverseTunnelService, signatureService portainer.DigitalSignatureService, assetsPath string) portainer.KubernetesDeployer {
+	return exec.NewKubernetesDeployer(dataStore, reverseTunnelService, signatureService, assetsPath)
 }
 
 func initJWTService(dataStore portainer.DataStore) (portainer.JWTService, error) {
@@ -396,7 +396,7 @@ func main() {
 
 	composeStackManager := initComposeStackManager(*flags.Assets, *flags.Data, reverseTunnelService, proxyManager)
 
-	kubernetesDeployer := initKubernetesDeployer(*flags.Assets)
+	kubernetesDeployer := initKubernetesDeployer(dataStore, reverseTunnelService, digitalSignatureService, *flags.Assets)
 
 	if dataStore.IsNew() {
 		err = updateSettingsFromFlags(dataStore, flags)
