@@ -196,8 +196,10 @@ angular.module('portainer.app').controller('StackController', [
     };
 
     $scope.editorUpdate = function (cm) {
+      if ($scope.stackFileContent !== cm.getValue()) {
+        $scope.state.isEditorDirty = true;
+      }
       $scope.stackFileContent = cm.getValue();
-      $scope.state.isEditorDirty = true;
     };
 
     $scope.stopStack = stopStack;
