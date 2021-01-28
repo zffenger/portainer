@@ -158,6 +158,7 @@ angular
 
     $scope.onChangeTemplate = async function onChangeTemplate(template) {
       try {
+        $scope.formValues.StackFileContent = undefined;
         $scope.selectedTemplate = template;
         $scope.formValues.StackFileContent = await CustomTemplateService.customTemplateFile(template.Id);
       } catch (err) {
@@ -167,7 +168,6 @@ angular
 
     async function initView() {
       var endpointMode = $scope.applicationState.endpoint.mode;
-      const endpointId = +$state.params.endpointId;
       $scope.state.StackType = 2;
       if (endpointMode.provider === 'DOCKER_SWARM_MODE' && endpointMode.role === 'MANAGER') {
         $scope.state.StackType = 1;
