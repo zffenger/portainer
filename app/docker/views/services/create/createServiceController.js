@@ -32,7 +32,7 @@ angular.module('portainer.docker').controller('CreateServiceController', [
   'NodeService',
   'SettingsService',
   'WebhookService',
-  'EndpointProvider',
+  'endpoint',
   function (
     $q,
     $scope,
@@ -58,8 +58,10 @@ angular.module('portainer.docker').controller('CreateServiceController', [
     NodeService,
     SettingsService,
     WebhookService,
-    EndpointProvider
+    endpoint
   ) {
+    $scope.endpoint = endpoint;
+
     $scope.formValues = {
       Name: '',
       RegistryModel: new PorImageRegistryModel(),
@@ -493,7 +495,7 @@ angular.module('portainer.docker').controller('CreateServiceController', [
           const resourceControl = data.Portainer.ResourceControl;
           const userId = Authentication.getUserDetails().ID;
           const rcPromise = ResourceControlService.applyResourceControl(userId, accessControlData, resourceControl);
-          const webhookPromise = $q.when($scope.formValues.Webhook && WebhookService.createServiceWebhook(serviceId, EndpointProvider.endpointID()));
+          const webhookPromise = $q.when(endpoint.Type !== 4 && $scope.formValues.Webhook && WebhookService.createServiceWebhook(serviceId, endpoint.ID));
           return $q.all([rcPromise, webhookPromise]);
         })
         .then(function success() {
