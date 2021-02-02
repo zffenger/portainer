@@ -1,7 +1,9 @@
 package user
 
 import (
-	"github.com/portainer/portainer/api"
+	"strings"
+
+	portainer "github.com/portainer/portainer/api"
 	"github.com/portainer/portainer/api/bolt/errors"
 	"github.com/portainer/portainer/api/bolt/internal"
 
@@ -58,7 +60,7 @@ func (service *Service) UserByUsername(username string) (*portainer.User, error)
 				return err
 			}
 
-			if u.Username == username {
+			if strings.EqualFold(u.Username, username) {
 				user = &u
 				break
 			}
