@@ -6,7 +6,7 @@ import (
 	portainer "github.com/portainer/portainer/api"
 )
 
-func (m *Migrator) updateStackResourceControlToDB23() error {
+func (m *Migrator) updateStackResourceControlToDB26() error {
 	resourceControls, err := m.resourceControlService.ResourceControls()
 	if err != nil {
 		return err

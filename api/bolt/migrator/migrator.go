@@ -344,7 +344,7 @@ func (m *Migrator) Migrate() error {
 
 	// Portainer 2.1
 	if m.currentDBVersion < 26 {
-		err := m.updateStackResourceControlToDB23()
+		err := m.updateStackResourceControlToDB26()
 		if err != nil {
 			return err
 		}
