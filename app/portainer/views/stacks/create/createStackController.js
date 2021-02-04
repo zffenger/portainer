@@ -178,7 +178,6 @@ angular
 
     async function initView() {
       var endpointMode = $scope.applicationState.endpoint.mode;
-      const endpointId = +$state.params.endpointId;
       $scope.state.StackType = 2;
       if (endpointMode.provider === 'DOCKER_SWARM_MODE' && endpointMode.role === 'MANAGER') {
         $scope.state.StackType = 1;
@@ -201,16 +200,7 @@ angular
 
     this.uiCanExit = async function () {
       if ($scope.state.Method === 'editor' && $scope.formValues.StackFileContent && $scope.state.isEditorDirty) {
-        return ModalService.confirmAsync({
-          title: 'Are you sure ?',
-          message: 'You currently have unsaved changes in the editor. Are you sure you want to leave?',
-          buttons: {
-            confirm: {
-              label: 'Yes',
-              className: 'btn-danger',
-            },
-          },
-        });
+        return ModalService.confirmWebEditorDiscard();
       }
     };
 
